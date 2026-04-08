@@ -9,7 +9,7 @@ local ESC = api.nvim_replace_termcodes('<Esc>', true, true, true)
 local LABELS = {}
 local CONFIG = {
   -- The labels that may be used, in order of their preference.
-  labels = 'tnseriaogmplfuwyqbjdhvkzxc',
+  labels = 'fdsaghjklrewqtyuiopvcxzbnm',
 
   -- The highlight group to use for match highlights.
   search = 'Search',

@@ -79,7 +79,7 @@ The following settings are available (along with their defaults):
 ```lua
 {
   -- The labels that may be used, in order of their preference.
-  labels = 'tnseriaogmplfuwyqbjdhvkzxc',
+  labels = 'fdsaghjklrewqtyuiopvcxzbnm',
 
   -- The highlight group to use for match highlights.
   search = 'Search',
@@ -89,8 +89,13 @@ The following settings are available (along with their defaults):
 }
 ```
 
-If you're not using Colemak as your keyboard layout you'll probably want to
-change the list of labels.
+For Colemak users you can use the following configuration:
+
+```lua
+require('jump').setup({
+  labels = 'tnseriaogmplfuwyqbjdhvkzxc',
+})
+```
 
 The default highlight group for labels is `FlashLabel` so migrating from flash
 is easier.

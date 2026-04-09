@@ -85,7 +85,7 @@ The following settings are available (along with their defaults):
   search = 'Search',
 
   -- The highlight group to use for labels.
-  label = 'FlashLabel',
+  label = 'Substitute',
 }
 ```
 
@@ -97,7 +97,7 @@ require('jump').setup({
 })
 ```
 
-The default highlight group for labels is `FlashLabel` so migrating from flash
+The default highlight group for labels is `Substitute`, the default highlight group that `FlashLabel` links to, so migrating from flash
 is easier.
 
 ## License

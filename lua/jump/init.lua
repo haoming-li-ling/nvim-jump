@@ -15,7 +15,7 @@ local CONFIG = {
   search = 'Search',
 
   -- The highlight group to use for labels.
-  label = 'FlashLabel',
+  label = 'Substitute',
 }
 
 local function search(pattern, lines, start_line, matches)

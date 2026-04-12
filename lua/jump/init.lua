@@ -135,7 +135,7 @@ function M.start()
           CONFIG.search,
           { match.line, match.start_col },
           { match.line, match.end_col },
-          { priority = 1 }
+          { priority = 200 }
         )
 
         if label then
@@ -143,7 +143,7 @@ function M.start()
           api.nvim_buf_set_extmark(buf, NS, match.line, match.start_col, {
             virt_text = { { label, CONFIG.label } },
             virt_text_pos = 'overlay',
-            priority = 2,
+            priority = 201,
           })
         end
       end

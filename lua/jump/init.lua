@@ -16,7 +16,27 @@ local CONFIG = {
 
   -- The highlight group to use for labels.
   label = 'FlashLabel',
+
+  -- Enable/disable backdrop dimming during active search.
+  backdrop = true,
+
+  -- The highlight group to use for backdrop dimming.
+  backdrop_hl = 'FlashBackdrop',
 }
+
+local function render_backdrop(buf, top, lines)
+  for idx, _ in ipairs(lines) do
+    api.nvim_buf_set_extmark(buf, NS, top + idx - 2, 0, {
+      line_hl_group = CONFIG.backdrop_hl,
+      priority = 0,
+    })
+  end
+end
+
+local function set_default_highlights()
+  api.nvim_set_hl(0, 'FlashLabel', { default = true, link = 'IncSearch' })
+  api.nvim_set_hl(0, 'FlashBackdrop', { default = true, link = 'Comment' })
+end
 
 local function search(pattern, lines, start_line, matches)
   local lower = pattern == pattern:lower()
@@ -119,6 +139,10 @@ function M.start(opts)
     api.nvim_buf_clear_namespace(buf, NS, 0, -1)
 
     if #chars > 0 then
+      if CONFIG.backdrop then
+        render_backdrop(buf, top, lines)
+      end
+
       search(chars, lines, top, matches)
 
       local avail = available_labels(lines, matches)
@@ -181,11 +205,17 @@ function M.start(opts)
   vim.cmd.redraw()
 end
 
+function M.toggle_backdrop()
+  CONFIG.backdrop = not CONFIG.backdrop
+  return CONFIG.backdrop
+end
+
 function M.setup(opts)
   if opts then
     CONFIG = vim.tbl_extend('force', CONFIG, opts)
   end
 
+  set_default_highlights()
   LABELS = fn.split(CONFIG.labels, '\\zs')
 end
 

@@ -62,13 +62,20 @@ Install the plugin using your favorite plugin manager, then create a mapping
 (this maps the plugin to the `s` key):
 
 ```lua
-vim.keymap.set({ 'n', 'x', 'o' }, 's', require('jump').start, {})
+vim.keymap.set({ 'n', 'x', 'o' }, 's', function()
+  require('jump').start()
+end, {})
 ```
 To make `f` and `t` work with matches of arbitrary lengths and with labels in operator-pending mode, create the following mappings:
 
 ```lua
-vim.keymap.set('o', 'f', function require('jump').start({ operator_mode = 'inclusive' }) end, {})
-vim.keymap.set('o', 't', function require('jump').start({ operator_mode = 'exclusive' }) end, {})
+vim.keymap.set('o', 'f', function()
+  require('jump').start({ operator_mode = 'inclusive' })
+end, {})
+
+vim.keymap.set('o', 't', function()
+  require('jump').start({ operator_mode = 'exclusive' })
+end, {})
 ```
 If you want to change the labels to use or the highlight groups, use the `setup`
 function:
@@ -91,7 +98,19 @@ The following settings are available (along with their defaults):
 
   -- The highlight group to use for labels.
   label = 'FlashLabel',
+
+  -- Enable/disable backdrop dimming during active search.
+  backdrop = true,
+
+  -- The highlight group to use for backdrop dimming.
+  backdrop_hl = 'FlashBackdrop',
 }
+```
+
+To quickly toggle backdrop dimming globally:
+
+```lua
+require('jump').toggle_backdrop()
 ```
 
 For Colemak users you can use the following configuration:

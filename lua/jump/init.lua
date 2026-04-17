@@ -5,6 +5,7 @@ local M = {}
 local NS = api.nvim_create_namespace('jump')
 local CR = api.nvim_replace_termcodes('<Cr>', true, true, true)
 local BS = api.nvim_replace_termcodes('<Bs>', true, true, true)
+local CTRL_H = api.nvim_replace_termcodes('<C-h>', true, true, true)
 local ESC = api.nvim_replace_termcodes('<Esc>', true, true, true)
 local LABELS = {}
 local CONFIG = {
@@ -125,7 +126,7 @@ function M.start(opts)
       end
 
       break
-    elseif char == BS then
+    elseif char == BS or char == CTRL_H then
       chars = chars:sub(1, #chars - 1)
     elseif jump_to then
       api.nvim_win_set_cursor(win, jump_to)
@@ -164,7 +165,7 @@ function M.start(opts)
           CONFIG.search,
           { match.line, match.start_col },
           { match.line, match.end_col },
-          { priority = 1 }
+          { priority = 200 }
         )
 
         if label then
@@ -191,7 +192,7 @@ function M.start(opts)
           api.nvim_buf_set_extmark(buf, NS, match.line, match.start_col, {
             virt_text = { { label, CONFIG.label } },
             virt_text_pos = 'overlay',
-            priority = 2,
+            priority = 201,
           })
         end
       end

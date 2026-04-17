@@ -169,6 +169,7 @@ function M.start(opts)
         )
 
         if label then
+          local label_pos, label_mark = match.start_col, match.start_col
           if
             (
               inclusive
@@ -185,20 +186,15 @@ function M.start(opts)
               )
             )
           then
-            active[label] = { match.line + 1, match.end_col }
-            api.nvim_buf_set_extmark(buf, NS, match.line, match.end_col - 1, {
-              virt_text = { { label, CONFIG.label } },
-              virt_text_pos = 'overlay',
-              priority = 201,
-            })
-          else
-            active[label] = { match.line + 1, match.start_col }
-            api.nvim_buf_set_extmark(buf, NS, match.line, match.start_col, {
-              virt_text = { { label, CONFIG.label } },
-              virt_text_pos = 'overlay',
-              priority = 201,
-            })
+            label_pos, label_mark = match.end_col, match.end_col - 1
           end
+
+          active[label] = { match.line + 1, label_pos }
+          api.nvim_buf_set_extmark(buf, NS, match.line, label_mark, {
+            virt_text = { { label, CONFIG.label } },
+            virt_text_pos = 'overlay',
+            priority = 201,
+          })
         end
       end
     end

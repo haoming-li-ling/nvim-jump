@@ -186,14 +186,19 @@ function M.start(opts)
             )
           then
             active[label] = { match.line + 1, match.end_col }
+            api.nvim_buf_set_extmark(buf, NS, match.line, match.end_col - 1, {
+              virt_text = { { label, CONFIG.label } },
+              virt_text_pos = 'overlay',
+              priority = 201,
+            })
           else
             active[label] = { match.line + 1, match.start_col }
+            api.nvim_buf_set_extmark(buf, NS, match.line, match.start_col, {
+              virt_text = { { label, CONFIG.label } },
+              virt_text_pos = 'overlay',
+              priority = 201,
+            })
           end
-          api.nvim_buf_set_extmark(buf, NS, match.line, match.start_col, {
-            virt_text = { { label, CONFIG.label } },
-            virt_text_pos = 'overlay',
-            priority = 201,
-          })
         end
       end
     end

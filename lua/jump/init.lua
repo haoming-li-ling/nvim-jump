@@ -152,6 +152,7 @@ function M.start(opts)
   if CONFIG.disable_conceal then
     conceallevel = api.nvim_get_option_value('conceallevel', { win = win })
     api.nvim_set_option_value('conceallevel', 0, { win = win })
+    vim.cmd.redraw()
   end
 
   local ok, err = xpcall(function()

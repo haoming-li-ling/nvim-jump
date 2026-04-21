@@ -28,10 +28,10 @@ local api = vim.api
 
 local M = {}
 local NS = api.nvim_create_namespace('jump')
-local CR = api.nvim_replace_termcodes('<Cr>', true, true, true)
-local BS = api.nvim_replace_termcodes('<Bs>', true, true, true)
-local CTRL_H = api.nvim_replace_termcodes('<C-h>', true, true, true)
-local ESC = api.nvim_replace_termcodes('<Esc>', true, true, true)
+local CR = vim.keycode('<Cr>')
+local BS = vim.keycode('<Bs>')
+local CTRL_H = vim.keycode('<C-h>')
+local ESC = vim.keycode('<Esc>')
 ---@type string[]
 local LABELS = {}
 ---@type JumpConfig

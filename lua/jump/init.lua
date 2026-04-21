@@ -1,13 +1,40 @@
 local fn = vim.fn
 local api = vim.api
 
+---@class JumpMatch
+---@field line integer
+---@field start_col integer
+---@field end_col integer
+---@field line_index integer
+
+---@class JumpStartOpts
+---@field operator_mode? 'none'|'inclusive'|'exclusive'
+
+---@class JumpConfig
+---@field labels string
+---@field search string
+---@field label string
+---@field backdrop boolean
+---@field backdrop_hl string
+---@field disable_conceal boolean
+
+---@class JumpConfigOpts
+---@field labels? string
+---@field search? string
+---@field label? string
+---@field backdrop? boolean
+---@field backdrop_hl? string
+---@field disable_conceal? boolean
+
 local M = {}
 local NS = api.nvim_create_namespace('jump')
 local CR = api.nvim_replace_termcodes('<Cr>', true, true, true)
 local BS = api.nvim_replace_termcodes('<Bs>', true, true, true)
 local CTRL_H = api.nvim_replace_termcodes('<C-h>', true, true, true)
 local ESC = api.nvim_replace_termcodes('<Esc>', true, true, true)
+---@type string[]
 local LABELS = {}
+---@type JumpConfig
 local CONFIG = {
   -- The labels that may be used, in order of their preference.
   labels = 'fdsaghjklrewqtyuiopvcxzbnm',
@@ -28,6 +55,9 @@ local CONFIG = {
   disable_conceal = true,
 }
 
+---@param buf integer
+---@param top integer
+---@param lines string[]
 local function render_backdrop(buf, top, lines)
   for idx, _ in ipairs(lines) do
     api.nvim_buf_set_extmark(buf, NS, top + idx - 2, 0, {
@@ -42,6 +72,10 @@ local function set_default_highlights()
   api.nvim_set_hl(0, 'FlashBackdrop', { default = true, link = 'Comment' })
 end
 
+---@param pattern string
+---@param lines string[]
+---@param start_line integer
+---@param matches JumpMatch[]
 local function search(pattern, lines, start_line, matches)
   local lower = pattern == pattern:lower()
 
@@ -71,6 +105,9 @@ local function search(pattern, lines, start_line, matches)
   end
 end
 
+---@param lines string[]
+---@param matches JumpMatch[]
+---@return table<string, boolean>
 local function available_labels(lines, matches)
   local avail = {}
 
@@ -90,6 +127,7 @@ local function available_labels(lines, matches)
   return avail
 end
 
+---@param opts? JumpStartOpts
 function M.start(opts)
   local opts = opts or {}
   local operator_mode = opts.operator_mode or 'none'
@@ -104,8 +142,11 @@ function M.start(opts)
   local bot = info.botline
   local lines = api.nvim_buf_get_lines(buf, top - 1, bot, true)
   local chars = ''
+  ---@type JumpMatch[]
   local matches = {}
+  ---@type table<string, integer[]>
   local active = {}
+  ---@type integer|nil
   local conceallevel = nil
 
   if CONFIG.disable_conceal then
@@ -225,11 +266,13 @@ function M.start(opts)
   end
 end
 
+---@return boolean
 function M.toggle_backdrop()
   CONFIG.backdrop = not CONFIG.backdrop
   return CONFIG.backdrop
 end
 
+---@param opts? JumpConfigOpts
 function M.setup(opts)
   if opts then
     CONFIG = vim.tbl_extend('force', CONFIG, opts)

@@ -115,7 +115,7 @@ function M.start(opts)
 
   local ok, err = xpcall(function()
     while true do
-      api.nvim_echo({ { '/' .. chars, '' } }, false, {})
+      -- api.nvim_echo({ { '/' .. chars, '' } }, false, {})
 
       local char = fn.getcharstr(-1)
       local jump_to = active[char]
@@ -217,7 +217,7 @@ function M.start(opts)
   if conceallevel ~= nil then
     api.nvim_set_option_value('conceallevel', conceallevel, { win = win })
   end
-  api.nvim_echo({ { '', '' } }, false, {})
+  -- api.nvim_echo({ { '', '' } }, false, {})
   vim.cmd.redraw()
 
   if not ok then

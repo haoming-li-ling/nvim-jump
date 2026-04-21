@@ -104,6 +104,9 @@ The following settings are available (along with their defaults):
 
   -- The highlight group to use for backdrop dimming.
   backdrop_hl = 'FlashBackdrop',
+
+  -- Temporarily disable conceal while searching so matches are fully visible.
+  disable_conceal = true,
 }
 ```
 

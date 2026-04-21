@@ -23,6 +23,9 @@ local CONFIG = {
 
   -- The highlight group to use for backdrop dimming.
   backdrop_hl = 'FlashBackdrop',
+
+  -- Temporarily disable conceal while searching so matches are fully visible.
+  disable_conceal = true,
 }
 
 local function render_backdrop(buf, top, lines)
@@ -103,9 +106,12 @@ function M.start(opts)
   local chars = ''
   local matches = {}
   local active = {}
-  local conceallevel = api.nvim_get_option_value('conceallevel', { win = win })
+  local conceallevel = nil
 
-  api.nvim_set_option_value('conceallevel', 0, { win = win })
+  if CONFIG.disable_conceal then
+    conceallevel = api.nvim_get_option_value('conceallevel', { win = win })
+    api.nvim_set_option_value('conceallevel', 0, { win = win })
+  end
 
   local ok, err = xpcall(function()
     while true do
@@ -208,7 +214,9 @@ function M.start(opts)
   end, debug.traceback)
 
   api.nvim_buf_clear_namespace(buf, NS, 0, -1)
-  api.nvim_set_option_value('conceallevel', conceallevel, { win = win })
+  if conceallevel ~= nil then
+    api.nvim_set_option_value('conceallevel', conceallevel, { win = win })
+  end
   api.nvim_echo({ { '', '' } }, false, {})
   vim.cmd.redraw()
 

@@ -222,23 +222,29 @@ function M.start(opts)
 
           if label then
             local label_pos, label_mark = match.start_col, match.start_col
+            local match_after_cursor = (
+              match.line + 1 > cur_row
+              or match.line + 1 == cur_row and match.end_col > cur_col
+            )
+            local match_before_cursor = (
+              match.line + 1 < cur_row
+              or match.line + 1 == cur_row and match.end_col < cur_col
+            )
+            local mode = vim.api.nvim_get_mode().mode
+
             if
-              (
-                inclusive
-                and (
-                  match.line + 1 > cur_row
-                  or match.line + 1 == cur_row and match.end_col > cur_col
-                )
-              )
-              or (
-                exclusive
-                and (
-                  match.line + 1 < cur_row
-                  or match.line + 1 == cur_row and match.end_col < cur_col
-                )
-              )
+              (inclusive and match_after_cursor)
+              or (exclusive and match_before_cursor)
             then
               label_pos, label_mark = match.end_col, match.end_col - 1
+            end
+
+            if
+              vim.iter({ 'v', 'V', '^V' }):any(function(v)
+                return v == mode
+              end) and match_after_cursor
+            then
+              label_mark = label_mark - 1
             end
 
             active[label] = { match.line + 1, label_pos }

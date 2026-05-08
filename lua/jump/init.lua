@@ -244,7 +244,7 @@ function M.start(opts)
                 return v == mode
               end) and match_after_cursor
             then
-              label_mark = label_mark - 1
+              label_pos = label_pos - 1
             end
 
             active[label] = { match.line + 1, label_pos }

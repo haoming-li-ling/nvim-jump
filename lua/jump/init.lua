@@ -131,8 +131,8 @@ end
 function M.start(opts)
   local opts = opts or {}
   local operator_mode = opts.operator_mode or 'none'
-  local inclusive = opts.operator_mode == 'inclusive'
-  local exclusive = opts.operator_mode == 'exclusive'
+  local inclusive = operator_mode == 'inclusive'
+  local exclusive = operator_mode == 'exclusive'
 
   local win = api.nvim_get_current_win()
   local cur_row, cur_col = unpack(api.nvim_win_get_cursor(win))
@@ -148,6 +148,7 @@ function M.start(opts)
   local active = {}
   ---@type integer|nil
   local conceallevel = nil
+  local mode = vim.api.nvim_get_mode().mode
 
   if CONFIG.disable_conceal then
     conceallevel = api.nvim_get_option_value('conceallevel', { win = win })
@@ -230,7 +231,6 @@ function M.start(opts)
               match.line + 1 < cur_row
               or match.line + 1 == cur_row and match.end_col < cur_col
             )
-            local mode = vim.api.nvim_get_mode().mode
 
             if
               (inclusive and match_after_cursor)

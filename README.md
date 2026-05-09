@@ -1,3 +1,13 @@
+# New features in this fork
+
+
+- Properly handles visual and operator-pending mode jumps (the original plugin basically only predictably useful in normal mode)
+- Two modes for jumps in visual or operator-pending modes:
+    - **inclusive** (like `f`, jumps/operations up to the end of match farther from the cursor), and
+    - **exclusive** (like `t`, jumps/operations up to just before the end of the match closer to the cursor)
+- Option `backdrop` (default enabled) to dim text in the buffer with a custom highlight (default `FlashBackdrop`) during a search, so that labels visually pop out
+- Option `disable_conceal` ()default enabled) to `set conceallevel=0` during a search, so that all characters are visible
+
 # The smallest sensible Neovim jump plugin in the west
 
 nvim-jump is a jump plugin similar to
@@ -46,11 +56,8 @@ and I now deem it stable enough to share it as a standalone plugin.
 - Labels that remain consistent (as much as possible) as you type more input
 - Reduce/correct input by pressing backspace
 - Case-insensitive if the input is lower case, case-sensitive if it includes
-  capitals
+  uppercase letters
 - Small codebase so less likely to be riddled with bugs
-
-Feature-wise this plugin is considered complete and extra features (e.g. jumping
-between windows) won't be added.
 
 ## Requirements
 
@@ -66,14 +73,14 @@ vim.keymap.set({ 'n', 'x', 'o' }, 's', function()
   require('jump').start()
 end, {})
 ```
-To make `f` and `t` work with matches of arbitrary lengths and with labels in operator-pending mode, create the following mappings:
+To make `f` and `t` work with matches of arbitrary lengths and with labels in visual and operator-pending modes, create the following mappings:
 
 ```lua
-vim.keymap.set('o', 'f', function()
+vim.keymap.set({ 'x', 'o' }, 'f', function()
   require('jump').start({ operator_mode = 'inclusive' })
 end, {})
 
-vim.keymap.set('o', 't', function()
+vim.keymap.set({ 'x', 'o' }, 't', function()
   require('jump').start({ operator_mode = 'exclusive' })
 end, {})
 ```
@@ -124,7 +131,7 @@ require('jump').setup({
 })
 ```
 
-The default highlight group for labels is `FlashLabel` so migrating from flash
+The default highlight group for labels is `FlashLabel` so migrating from Flash
 is easier.
 
 ## License

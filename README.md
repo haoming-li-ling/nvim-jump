@@ -6,7 +6,7 @@
     - **inclusive** (like `f`, jumps/operations up to the end of match farther from the cursor), and
     - **exclusive** (like `t`, jumps/operations up to just before the end of the match closer to the cursor)
 - Option `backdrop` (default enabled) to dim text in the buffer with a custom highlight (default `FlashBackdrop`) during a search, so that labels visually pop out
-- Option `disable_conceal` ()default enabled) to `set conceallevel=0` during a search, so that all characters are visible
+- Option `disable_conceal` (default enabled) to `set conceallevel=0` temporarily during a search, so that all characters are visible
 
 # The smallest sensible Neovim jump plugin in the west
 

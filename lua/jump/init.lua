@@ -149,6 +149,10 @@ function M.start(opts)
   ---@type integer|nil
   local conceallevel = nil
   local mode = vim.api.nvim_get_mode().mode
+  local operator = mode:sub(1, 2) == 'no'
+  local visual = vim.iter({ 'v', 'V', '^V' }):any(function(v)
+    return v == mode
+  end)
 
   if CONFIG.disable_conceal then
     conceallevel = api.nvim_get_option_value('conceallevel', { win = win })
@@ -175,6 +179,9 @@ function M.start(opts)
         end
 
         if jump_to then
+          if operator then
+            vim.cmd('normal! v')
+          end
           api.nvim_win_set_cursor(win, jump_to)
         end
 
@@ -182,6 +189,9 @@ function M.start(opts)
       elseif char == BS or char == CTRL_H then
         chars = chars:sub(1, #chars - 1)
       elseif jump_to then
+        if operator then
+          vim.cmd('normal! v')
+        end
         api.nvim_win_set_cursor(win, jump_to)
         break
       else
@@ -223,10 +233,12 @@ function M.start(opts)
 
           if label then
             local label_pos, label_mark = match.start_col, match.start_col
+
             local match_after_cursor = (
               match.line + 1 > cur_row
               or match.line + 1 == cur_row and match.end_col > cur_col
             )
+
             local match_before_cursor = (
               match.line + 1 < cur_row
               or match.line + 1 == cur_row and match.end_col < cur_col
@@ -239,11 +251,7 @@ function M.start(opts)
               label_pos, label_mark = match.end_col, match.end_col - 1
             end
 
-            if
-              vim.iter({ 'v', 'V', '^V' }):any(function(v)
-                return v == mode
-              end) and match_after_cursor
-            then
+            if (visual or operator) and match_after_cursor then
               label_pos = label_pos - 1
             end
 

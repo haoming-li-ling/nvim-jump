@@ -304,9 +304,7 @@ M.start = function(opts)
   opts = opts or { operator_mode = 'none' }
   return function()
     M.cache = { operator_mode = opts.operator_mode, query = '' }
-    return ('<Cmd>lua require("jump").initiate({ operator_mode = %s })<CR>'):format(
-      opts.operator_mode
-    )
+    return '<Cmd>lua require("jump").initiate()<CR>'
   end
 end
 

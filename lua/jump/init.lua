@@ -127,10 +127,10 @@ local function available_labels(lines, matches)
   return avail
 end
 
----@param opts? JumpStartOpts
-function M.start(opts)
-  local opts = opts or {}
-  local operator_mode = opts.operator_mode or 'none'
+function M.initiate()
+  local operator_mode = M.cache.operator_mode
+  local query = M.cache.query
+  vim.api.nvim_feedkeys(query, 't', true)
   local inclusive = operator_mode == 'inclusive'
   local exclusive = operator_mode == 'exclusive'
 
@@ -182,6 +182,7 @@ function M.start(opts)
           if operator then
             vim.cmd('normal! v')
           end
+          M.cache.query = chars
           api.nvim_win_set_cursor(win, jump_to)
         end
 
@@ -192,6 +193,7 @@ function M.start(opts)
         if operator then
           vim.cmd('normal! v')
         end
+        M.cache.query = chars
         api.nvim_win_set_cursor(win, jump_to)
         break
       else
@@ -295,6 +297,17 @@ function M.setup(opts)
 
   set_default_highlights()
   LABELS = fn.split(CONFIG.labels, '\\zs')
+end
+
+M.cache = {}
+M.start = function(opts)
+  opts = opts or { operator_mode = 'none' }
+  return function()
+    M.cache = { operator_mode = opts.operator_mode, query = '' }
+    return ('<Cmd>lua require("jump").initiate({ operator_mode = %s })<CR>'):format(
+      opts.operator_mode
+    )
+  end
 end
 
 M.setup()
